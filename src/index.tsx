@@ -1,0 +1,83 @@
+import { createMemo, createSignal } from 'solid-js'
+
+export interface SuggestProps<T = string> {
+  onQuery: (query: string) => T[],  // Suggestions assumed ordered by client
+  onSelect: (suggestion: T) => void,
+  renderSuggestion: (suggestion: T) => HTMLElement,
+  reverseKeyInput?: boolean,
+}
+
+export default function Suggest(props: SuggestProps) {
+  const [query, setQuery] = createSignal('');
+  const [staged, setStaged] = createSignal(0);
+  const suggestions = createMemo(() => props.onQuery(query()));
+
+  function stageNextSuggestion() {
+    setStaged((s) => (s + 1) % suggestions().length);
+  };
+
+  function stagePrevSuggestion() {
+    setStaged((s) => (s - 1 + suggestions().length) % suggestions().length);
+  };
+
+  function reset() {
+    setQuery('');
+    setStaged(0);
+  }
+
+  // Handles special input for suggestion behavior
+  function handleKeyDown(e: KeyboardEvent) {
+    const keyInputReversed = props.reverseKeyInput ?? false;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (keyInputReversed) {
+        stagePrevSuggestion();
+      } else {
+        stageNextSuggestion();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (keyInputReversed) {
+        stageNextSuggestion();
+      } else {
+        stagePrevSuggestion();
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      props.onSelect(suggestions()[staged()]);
+      reset();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      reset();
+    }
+    // else -> propagates up to allow input
+  }
+
+  return <div
+    class='s-sug-container'
+    role='combobox'
+    aria-expanded={suggestions().length > 0}
+    aria-haspopup='listbox'
+  >
+    <input
+      type='search'
+      class='s-sug-search'
+      value={query()}
+      on:input={e => setQuery(e.currentTarget.value)}
+      on:keydown={handleKeyDown}
+      aria-autocomplete='list'
+    />
+    <ul class='s-sug-suggestions' role='listbox'>
+      {suggestions().map((s, i) => (
+        <li
+          class='s-sug-suggestion'
+          data-staged={staged() === i}
+          role='option'
+          aria-selected={staged() === i ? 'true' : 'false'}
+        >
+          {props.renderSuggestion(s)}
+        </li>)
+      )}
+    </ul>
+  </div>
+}
