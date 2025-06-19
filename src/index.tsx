@@ -9,7 +9,7 @@ export interface SuggestProps<T = string> {
 
 export default function Suggest(props: SuggestProps) {
   const [query, setQuery] = createSignal('');
-  const [staged, setStaged] = createSignal(0);
+  const [staged, setStaged] = createSignal<number | null>(null);
   const suggestions = createMemo(() => props.onQuery(query()));
 
   function stageSuggestion(index: number) {
@@ -17,21 +17,32 @@ export default function Suggest(props: SuggestProps) {
   }
 
   function stageNextSuggestion() {
-    setStaged(s => (s + 1) % suggestions().length);
+    setStaged(s => {
+      if (suggestions().length === 0) return null;
+      const current = s ?? -1;
+      return (current + 1) % suggestions().length;
+    });
   };
 
   function stagePrevSuggestion() {
-    setStaged(s => (s - 1 + suggestions().length) % suggestions().length);
+    setStaged(s => {
+      if (suggestions().length === 0) return null;
+      const current = s ?? 0;
+      return (current - 1 + suggestions().length) % suggestions().length;
+    });
   };
 
   function selectStagedSuggestion() {
-    props.onSelect(suggestions()[staged()]);
-    reset();
+    const index = staged()
+    if (index !== null) {
+      props.onSelect(suggestions()[index]);
+      reset();
+    }
   }
 
   function reset() {
     setQuery('');
-    setStaged(0);
+    setStaged(null);
   }
 
   // Handles special input for suggestion behavior
