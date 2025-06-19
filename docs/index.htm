@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="importmap">
+    {
+      "imports": {
+        "solid-js": "https://esm.sh/solid-js@1.9.7",
+        "solid-js/web": "https://esm.sh/solid-js@1.9.7/web"
+      }
+    }
+  </script>
+  <meta charset="UTF-8">
+  <title>Solid Suggest - SolidJS Search Suggestions Dropdown</title>
+  <meta name="description" content="Super simple search suggestions dropdown component for Solid.js">
+  <meta name="author" content="Antriksh Yadav">
+  <meta name="theme-color" content="#FFD131">
+  <link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+  <h1>Solid Suggest</h1>
+  <main>
+    <div class="doc-description">
+      <h2>Very basic usage</h2>
+      <strong>Plain text suggestions, no styling</strong>
+    </div>
+    <section class="doc-example">
+      <pre class="doc-code-area"><code>
+import Suggest from "solid-suggest";
+
+const items = ["Apple", "Banana", "Cherry", "Date"];
+
+function Example() {
+  const [selected, setSelected] = createSignal("none");
+  return (
+    &lt;>
+      &lt;p>Selected: {selected()}&lt;/p>
+      &lt;Suggest
+        renderSuggestion={item => item}
+        onQuery={query =>
+          items.filter(item =>
+            item.toLowerCase().includes(query.toLowerCase())
+          )
+        }
+        onSelect={setSelected}
+      />
+    &lt;/>
+  )
+}
+      </code></pre>
+      <div class="doc-demo-area" id="example1"></div>
+    </section>
+    <div class="doc-description">
+      <h2>Realistic usage</h2>
+      <strong>Objects as suggestions, with styling</strong>
+    </div>
+    <section class="doc-example">
+      <pre class="doc-code-area">
+        <strong>JSX</strong>
+        <code>
+import Suggest from "solid-suggest";
+
+const items = [
+  { name: "Eiffel Tower", kind: "Monument", rating: 5 },
+  { name: "Great Wall of China", kind: "Historical Site", rating: 5 },
+  { name: "Statue of Liberty", kind: "Monument", rating: 3 },
+  // ...more items...
+];
+
+function renderSearchItem(item) {
+  return (
+    &lt;span>
+      &lt;strong>{item.name}&lt;/strong> - {item.kind}
+      &lt;span className="rating">{"★".repeat(item.rating)}&lt;/span>
+    &lt;/span>
+  );
+}
+
+function Example() {
+  const [selected, setSelected] = createSignal("none");
+  return (
+    &lt;>
+      &lt;p>Selected: {selected()}&lt;/p>
+      &lt;Suggest
+        renderSuggestion={renderSearchItem}
+        onQuery={query =>
+          items.filter(
+            item =>
+              item.name.toLowerCase().includes(query.toLowerCase()) ||
+              item.kind.toLowerCase().includes(query.toLowerCase())
+          )
+        }
+        onSelect={item => setSelected(item.name)}
+      />
+    &lt;/>
+  );
+}
+        </code>
+        <strong>CSS</strong>
+        <code>
+.s-sug-container {
+  width: 25em;
+
+  input {
+    width: 100%;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    max-height: 20em;
+    margin: 0.25em 0 0;
+    padding: 0.25em 0 0 0;
+    list-style: none;
+    box-shadow: lightgray 0 0.25em 0.5em;
+    border-radius: 5px;
+    overflow-y: scroll;
+
+    li {
+      padding: 0.25em;
+
+      &[data-staged="true"] {
+        background-color: var(--accent);
+      }
+    }
+  }
+}
+        </code></pre>
+      <div class="doc-demo-area" id="example2"></div>
+    </section>
+  </main>
+  <footer>
+    Designed by <a href="https://antrikshy.com">Antriksh Yadav</a>. Source <a href="https://github.com/Antrikshy/solid-suggest">on GitHub</a>.
+  </footer>
+
+  <!-- Example 1 -->
+  <script type="module">
+    import { render } from "solid-js/web";
+    import { createSignal, createEffect } from "solid-js";
+    import Suggest from "../dist/index.js";
+
+    const items1 = ["Apple", "Banana", "Cherry", "Date"];
+    function Example() {
+      const [selected, setSelected] = createSignal("none");
+      createEffect(() => {
+        const outputEl = document.getElementById("output1");
+        outputEl.innerHTML = `Selected: ${selected()}`;
+      });
+      return [
+        Object.assign(document.createElement("p"), {
+          innerHTML: `Selected: ${selected()}`,
+          id: "output1"
+        }),
+        Suggest({
+          renderSuggestion: item => item,
+          onQuery: query => items1.filter(item => item.toLowerCase().includes(query.toLowerCase())),
+          onSelect: setSelected
+        })
+      ];
+    }
+
+    render(Example, document.getElementById("example1"));
+  </script>
+
+  <!-- Example 2 -->
+  <script type="module">
+    import { render } from "solid-js/web";
+    import { createSignal, createEffect } from "solid-js";
+    import Suggest from "../dist/index.js";
+
+    const items2 = [
+      { name: "Eiffel Tower", kind: "Monument", rating: 5 },
+      { name: "Great Wall of China", kind: "Historical Site", rating: 5 },
+      { name: "Statue of Liberty", kind: "Monument", rating: 3 },
+      { name: "Machu Picchu", kind: "Ancient City", rating: 4 },
+      { name: "Sydney Opera House", kind: "Building", rating: 3 },
+      { name: "Mount Everest", kind: "Mountain", rating: 2 },
+      { name: "Colosseum", kind: "Amphitheatre", rating: 5 },
+      { name: "Taj Mahal", kind: "Mausoleum", rating: 5 },
+      { name: "Big Ben", kind: "Clock Tower", rating: 4 },
+      { name: "Leaning Tower of Pisa", kind: "Tower", rating: 4 },
+      { name: "Christ the Redeemer", kind: "Statue", rating: 3 },
+      { name: "Sphinx of Giza", kind: "Statue", rating: 4 },
+      { name: "Stonehenge", kind: "Prehistoric Monument", rating: 1 },
+      { name: "Golden Gate Bridge", kind: "Bridge", rating: 3 },
+      { name: "Brandenburg Gate", kind: "Gate", rating: 2 },
+      { name: "Burj Khalifa", kind: "Skyscraper", rating: 4 },
+      { name: "Angkor Wat", kind: "Temple", rating: 3 },
+      { name: "Mount Rushmore", kind: "Monument", rating: 4 },
+      { name: "Arc de Triomphe", kind: "Arch", rating: 4 },
+      { name: "Tower of London", kind: "Castle", rating: 2 }
+    ];
+
+    function renderSearchItem(item) {
+      return `${item.name} - ${item.kind} (${Array(item.rating).fill("★").join("")})`;
+    }
+
+    function Example() {
+      const [selected, setSelected] = createSignal("none");
+      createEffect(() => {
+        const outputEl = document.getElementById("output2");
+        outputEl.innerHTML = `Selected: ${selected()}`;
+      });
+      return [
+        Object.assign(document.createElement("p"), {
+          innerHTML: `Selected: ${selected()}`,
+          id: "output2"
+        }),
+        Suggest({
+          renderSuggestion: renderSearchItem,
+          onQuery: query => items2.filter(
+            item => (
+              item.name.toLowerCase().includes(query.toLowerCase()) ||
+              item.kind.toLowerCase().includes(query.toLowerCase())
+            )
+          ),
+          onSelect: item => setSelected(item.name)
+        })
+      ];
+    }
+
+    render(Example, document.getElementById("example2"));
+  </script>
+</body>
+</html>
