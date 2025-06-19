@@ -12,13 +12,22 @@ export default function Suggest(props: SuggestProps) {
   const [staged, setStaged] = createSignal(0);
   const suggestions = createMemo(() => props.onQuery(query()));
 
+  function stageSuggestion(index: number) {
+    setStaged(index);
+  }
+
   function stageNextSuggestion() {
-    setStaged((s) => (s + 1) % suggestions().length);
+    setStaged(s => (s + 1) % suggestions().length);
   };
 
   function stagePrevSuggestion() {
-    setStaged((s) => (s - 1 + suggestions().length) % suggestions().length);
+    setStaged(s => (s - 1 + suggestions().length) % suggestions().length);
   };
+
+  function selectStagedSuggestion() {
+    props.onSelect(suggestions()[staged()]);
+    reset();
+  }
 
   function reset() {
     setQuery('');
@@ -44,8 +53,7 @@ export default function Suggest(props: SuggestProps) {
       }
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      props.onSelect(suggestions()[staged()]);
-      reset();
+      selectStagedSuggestion();
     } else if (e.key === 'Escape') {
       e.preventDefault();
       reset();
@@ -73,6 +81,8 @@ export default function Suggest(props: SuggestProps) {
           class='s-sug-suggestion'
           data-staged={staged() === i}
           role='option'
+          on:mouseenter={() => stageSuggestion(i)}
+          on:click={selectStagedSuggestion}
           aria-selected={staged() === i ? 'true' : 'false'}
         >
           {props.renderSuggestion(s)}
