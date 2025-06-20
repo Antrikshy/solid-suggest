@@ -1,22 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&family=Inter:opsz,wght@14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400&display=swap');
+
 html {
-  font-size: 16px;
   --accent: #FFD131;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 350;
 }
 
 body {
-  font-family: sans-serif;
-  margin: 2em;
+  padding: 2em;
+  margin: 0;
+  border-left: 1rem solid var(--accent);
+  border-right: 1rem solid var(--accent);
+
+  &:before,
+  &:after {
+    content: "";
+    position: fixed;
+    background: var(--accent);
+    left: 0;
+    right: 0;
+    height: 1rem;
+  }
+
+  &:before {
+    top: 0;
+  }
+
+  &:after {
+    bottom: 0;
+  }
 }
 
 a {
-  color: var(--accent);
+  padding: 0.15rem 0.25rem;
+  color: #000;
+  background-color: var(--accent);
 }
 
 footer {
   text-align: center;
 }
 
-h1, .doc-description {
+h1.logo {
+  margin: 0;
+  padding: 1rem;
+  line-height: 1rem;
+  position: fixed;
+  top: 0;
+  right: 0;
+  cursor: default;
+  background-color: #FFD131;
+}
+
+code {
+  font-family: "Martian Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+
+.doc-description {
   text-align: center;
 }
 
@@ -33,6 +79,8 @@ h1, .doc-description {
 
   .doc-code-area {
     padding-left: 3em;
+    gap: 1rem;
+    overflow-y: scroll;
   }
 
   .doc-demo-area {
