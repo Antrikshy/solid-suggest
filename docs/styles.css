@@ -52,7 +52,7 @@ h1.logo {
   top: 0;
   right: 0;
   cursor: default;
-  background-color: #FFD131;
+  background-color: var(--accent);
 }
 
 code {

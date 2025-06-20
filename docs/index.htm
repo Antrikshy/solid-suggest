@@ -15,6 +15,10 @@
   <meta name="author" content="Antriksh Yadav">
   <meta name="theme-color" content="#FFD131">
   <link rel="stylesheet" href="./styles.css"/>
+  <!-- highlight.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/styles/foundation.min.css">
+  <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </head>
 <body>
   <h1 class="logo">Solid Suggest</h1>
@@ -67,12 +71,8 @@ const items = [
 ];
 
 function renderSearchItem(item) {
-  return (
-    &lt;span>
-      &lt;strong>{item.name}&lt;/strong> - {item.kind}
-      &lt;span className="rating">{"★".repeat(item.rating)}&lt;/span>
-    &lt;/span>
-  );
+  return
+  `${item.name} - ${item.kind} (${Array(item.rating).fill("★").join("")})`;
 }
 
 function Example() {
