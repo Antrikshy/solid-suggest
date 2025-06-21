@@ -2,15 +2,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400&display=swap');
 
 html {
-  --accent: #FFD131;
+  --accent: #333;
   font-size: 16px;
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   font-weight: 350;
+  accent-color: var(--accent);
+  background-color: #fdf5f5;
 }
 
 body {
-  padding: 2em;
+  padding: 3em;
   margin: 0;
   border-left: 1rem solid var(--accent);
   border-right: 1rem solid var(--accent);
@@ -38,10 +40,7 @@ a {
   padding: 0.15rem 0.25rem;
   color: #000;
   background-color: var(--accent);
-}
-
-footer {
-  text-align: center;
+  color: #fff;
 }
 
 h1.logo {
@@ -53,6 +52,11 @@ h1.logo {
   right: 0;
   cursor: default;
   background-color: var(--accent);
+  color: #fff;
+}
+
+main {
+  padding-top: 3em;
 }
 
 code {
@@ -67,6 +71,7 @@ code {
 }
 
 .doc-example {
+  margin: 3em 0;
   display: flex;
   flex-direction: row;
 
@@ -84,7 +89,7 @@ code {
   }
 
   .doc-demo-area {
-    padding-top: 3em;
+    padding-top: 1em;
     align-items: center;
   }
 
@@ -113,6 +118,7 @@ code {
 
           &[data-staged="true"] {
             background-color: var(--accent);
+            color: #fff;
           }
         }
       }

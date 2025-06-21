@@ -13,15 +13,44 @@
   <title>Solid Suggest - SolidJS Search Suggestions Dropdown</title>
   <meta name="description" content="Super simple search suggestions dropdown component for Solid.js">
   <meta name="author" content="Antriksh Yadav">
-  <meta name="theme-color" content="#FFD131">
+  <meta name="theme-color" content="#333">
   <link rel="stylesheet" href="./styles.css"/>
   <!-- highlight.js for syntax highlighting -->
   <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/styles/foundation.min.css">
   <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
+  <script>  // Just a fun little color thing
+    const setAccent = colorHex => {
+      document.documentElement.style.setProperty("--accent", colorHex);
+    };
+    const setThemeColor = colorHex => {
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", colorHex);
+    };
+
+    const colorRotation = ["#20063B", "#a100f2", "#A34400", "#b61390", "#2274A5"];
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      const colorHex = colorRotation[Math.floor(Math.random() * colorRotation.length)];
+      setAccent(colorHex);
+      setThemeColor(colorHex);
+    } else {
+      const shuffledColors = colorRotation
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+      shuffledColors.forEach((colorHex, i) => {
+        setTimeout(() => {
+          setAccent(colorHex);
+          setThemeColor(colorHex);
+        }, 500 * i);
+      });
+    }
+  </script>
 </head>
 <body>
   <h1 class="logo">Solid Suggest</h1>
+  <strong>Maintained by <a href="https://antrikshy.com">Antriksh Yadav</a>. Contribute <a href="https://github.com/Antrikshy/solid-suggest">on GitHub</a>.</strong>
   <main>
     <div class="doc-description">
       <h2>Very basic usage</h2>
@@ -31,7 +60,7 @@
       <pre class="doc-code-area"><code>
 import Suggest from "solid-suggest";
 
-const items = ["Apple", "Banana", "Cherry", "Date"];
+const items = ["Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape", "Honeydew", "Kiwi", "Lemon"];
 
 function Example() {
   const [selected, setSelected] = createSignal("none");
@@ -128,9 +157,6 @@ function Example() {
       <div class="doc-demo-area" id="example2"></div>
     </section>
   </main>
-  <footer>
-    Designed by <a href="https://antrikshy.com">Antriksh Yadav</a>. Source <a href="https://github.com/Antrikshy/solid-suggest">on GitHub</a>.
-  </footer>
 
   <!-- Example 1 -->
   <script type="module">
@@ -138,7 +164,7 @@ function Example() {
     import { createSignal, createEffect } from "solid-js";
     import Suggest from "../dist/index.js";
 
-    const items1 = ["Apple", "Banana", "Cherry", "Date"];
+    const items1 = ["Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape", "Honeydew", "Kiwi", "Lemon"];
     function Example() {
       const [selected, setSelected] = createSignal("none");
       createEffect(() => {
