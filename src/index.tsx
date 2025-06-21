@@ -11,6 +11,7 @@ export default function Suggest(props: SuggestProps) {
   const [query, setQuery] = createSignal('');
   const [staged, setStaged] = createSignal<number | null>(null);
   const suggestions = createMemo(() => props.onQuery(query()));
+  const numSuggestions = createMemo(() => suggestions().length);
 
   function stageSuggestion(index: number) {
     setStaged(index);
@@ -20,15 +21,15 @@ export default function Suggest(props: SuggestProps) {
     setStaged(s => {
       if (suggestions().length === 0) return null;
       const current = s ?? -1;
-      return (current + 1) % suggestions().length;
+      return (current + 1) % numSuggestions();
     });
   };
 
   function stagePrevSuggestion() {
     setStaged(s => {
-      if (suggestions().length === 0) return null;
+      if (numSuggestions() === 0) return null;
       const current = s ?? 0;
-      return (current - 1 + suggestions().length) % suggestions().length;
+      return (current - 1 + numSuggestions()) % numSuggestions();
     });
   };
 
@@ -75,7 +76,7 @@ export default function Suggest(props: SuggestProps) {
   return <div
     class='s-sug-container'
     role='combobox'
-    aria-expanded={suggestions().length > 0}
+    aria-expanded={numSuggestions() > 0}
     aria-haspopup='listbox'
   >
     <input
@@ -86,19 +87,21 @@ export default function Suggest(props: SuggestProps) {
       on:keydown={handleKeyDown}
       aria-autocomplete='list'
     />
-    <ul class='s-sug-suggestions' role='listbox'>
-      {suggestions().map((s, i) => (
-        <li
-          class='s-sug-suggestion'
-          data-staged={staged() === i}
-          role='option'
-          on:mouseenter={() => stageSuggestion(i)}
-          on:click={selectStagedSuggestion}
-          aria-selected={staged() === i ? 'true' : 'false'}
-        >
-          {props.renderSuggestion(s)}
-        </li>)
-      )}
-    </ul>
+    {numSuggestions() > 0 &&
+      <ul class='s-sug-suggestions' role='listbox'>
+        {suggestions().map((s, i) => (
+          <li
+            class='s-sug-suggestion'
+            data-staged={staged() === i}
+            role='option'
+            on:mouseenter={() => stageSuggestion(i)}
+            on:click={selectStagedSuggestion}
+            aria-selected={staged() === i ? 'true' : 'false'}
+          >
+            {props.renderSuggestion(s)}
+          </li>)
+        )}
+      </ul>
+    }
   </div>
 }
