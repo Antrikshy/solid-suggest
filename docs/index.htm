@@ -11,7 +11,7 @@
   </script>
   <meta charset="UTF-8">
   <title>solid-suggest - SolidJS Search Suggestions Dropdown</title>
-  <meta name="description" content="Super simple search suggestions dropdown component for Solid.js">
+  <meta name="description" content="Headless search suggestions dropdown component for Solid.js">
   <meta name="author" content="Antriksh Yadav">
   <meta name="theme-color" content="#333">
   <link rel="stylesheet" href="./styles.css"/>
@@ -130,6 +130,7 @@ function Example() {
         <code class="language-css">
 .s-sug-container {
   width: 25em;
+  position: relative;
 
   input {
     width: 100%;
@@ -139,8 +140,12 @@ function Example() {
     display: flex;
     flex-direction: column;
     max-height: 20em;
+    width: 100%;
     margin: 0.25em 0 0;
     padding: 0.25em 0 0 0;
+    position: absolute;
+    top: 1lh;
+    left: 0;
     list-style: none;
     box-shadow: lightgray 0 0.25em 0.5em;
     background-color: #fff;
@@ -159,14 +164,60 @@ function Example() {
         </code></pre>
       <div class="doc-demo-area" id="example2"></div>
     </section>
+    <div class="doc-description">
+      <h2>Upside-down suggestions</h2>
+      <big>Arrow keys reversed, CSS reverses UI elements</big>
+    </div>
+    <section class="doc-example">
+      <pre class="doc-code-area">
+        <strong>JSX</strong>
+        <code class="language-javascript">
+// Same as above, but with this change
+
+&lt;Suggest
+  // ...
+  reverseKeyInput={true}
+/>
+        </code>
+        <strong>CSS</strong>
+        <code class="language-css">
+/* Same as above, but with these changes */
+
+.s-sug-container {
+  display: flex;
+  flex-direction: column-reverse;
+
+  ul {
+    flex-direction: column-reverse;
+    margin: 0 0 0.25em;
+    bottom: 1lh;  /* top not set */
+    left: 0;
+  }
+}
+
+/* Plus, styles on the container to intentionally leave room */
+        </code></pre>
+      <div class="doc-demo-area" id="example3"></div>
+    </section>
     <section class="doc-tips">
       <div class="doc-description">
         <h2>General tips</h2>
       </div>
       <p><strong>Q. How do I supply recommendations to solid-suggest?</strong></p>
       <p>Using <code>onQuery</code>. solid-suggest relies on your application to track what suggestions should render at any time. <code>onQuery</code> is invoked at initial render and every time the user's query updates.</p>
+      <p><strong>Q. Does solid-suggest come with <em>any</em> styling?</strong></p>
+      <p>No. This is a completely headless library that gives you the bones of a suggestions dropdown. This includes semantic DOM elements, handling of mouse and keyboard input, and SolidJS reactivity. All styling is provided by the developer-user of solid-suggest.</p>
+      <p><strong>Q. Any styling recommendations?</strong></p>
+      <p>
+        Yes. At minimum, developers will likely want to:
+        <ol>
+          <li>Set <code>list-style: none</code> on the suggestions <code>ul</code>, and remove any default padding.</li>
+          <li><code>position: relative</code> on the top level container, and <code>position: absolute</code> on the suggestions <code>ul</code>, along with <code>top</code>, <code>bottom</code> etc. positioning styles to fit your needs. This will allow the dropdown to overlap neighboring elements.</li>
+        </ol>
+        Everything else is really up to you. You can see some other recommendations above. Feel free to use them as they are, or customize to fit your branding.
+      </p>
       <p><strong>Q. How can I hide the dropdown until user input?</strong></p>
-      <p>Supply solid-suggest with an <code>onQuery</code> that returns an empty array when the user's query is blank, like the following examples.</p>
+      <p>Supply solid-suggest with an <code>onQuery</code> that returns an empty array when the user's query is blank, like the following examples. Note how this leaves room for a lot of custom behavior.</p>
       <pre><code class="language-javascript">
 const onQuery = query => query ? /* compute suggestions */ : [];
 
@@ -213,7 +264,10 @@ return (
           renderSuggestion: item => item,
           onQuery: query => items1.filter(item => item.toLowerCase().includes(query.toLowerCase())),
           onSelect: setSelected
-        })
+        }),
+        Object.assign(document.createElement("p"), {
+          innerHTML: "Demo element after unstyled solid-suggest."
+        }),
       ];
     }
 
@@ -278,6 +332,62 @@ return (
     }
 
     render(Example, document.getElementById("example2"));
+  </script>
+
+  <!-- Example 3 -->
+  <script type="module">
+    import { render } from "solid-js/web";
+    import { createSignal, createEffect } from "solid-js";
+    import Suggest from "../dist/index.js";
+
+    const items3 = [
+      { name: "Tracer", role: "Damage" },
+      { name: "Reinhardt", role: "Tank" },
+      { name: "Mercy", role: "Support" },
+      { name: "Genji", role: "Damage" },
+      { name: "Winston", role: "Tank" },
+      { name: "Ana", role: "Support" },
+      { name: "Hanzo", role: "Damage" },
+      { name: "D.Va", role: "Tank" },
+      { name: "Lucio", role: "Support" },
+      { name: "Soldier: 76", role: "Damage" },
+      { name: "Sigma", role: "Tank" },
+      { name: "Moira", role: "Support" },
+      { name: "Reaper", role: "Damage" },
+      { name: "Zarya", role: "Tank" },
+      { name: "Baptiste", role: "Support" }
+    ];
+
+    function renderSearchItem(item) {
+      return `${item.name} (${item.role})`;
+    }
+
+    function Example() {
+      const [selected, setSelected] = createSignal("none");
+      createEffect(() => {
+        const outputEl = document.getElementById("output3");
+        outputEl.innerHTML = `Selected: ${selected()}`;
+      });
+      return [
+        Object.assign(document.createElement("p"), {
+          innerHTML: `Selected: ${selected()}`,
+          id: "output3"
+        }),
+        Suggest({
+          renderSuggestion: renderSearchItem,
+          onQuery: query => items3.filter(
+            item => (
+              item.name.toLowerCase().includes(query.toLowerCase()) ||
+              item.role.toLowerCase().includes(query.toLowerCase())
+            )
+          ),
+          onSelect: item => setSelected(item.name),
+          reverseKeyInput: true
+        })
+      ];
+    }
+
+    render(Example, document.getElementById("example3"));
   </script>
 </body>
 </html>

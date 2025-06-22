@@ -1,7 +1,7 @@
 {
   "name": "solid-suggest",
   "version": "1.0.0",
-  "description": "Search suggestion dropdown UI library for SolidJS",
+  "description": "Headless search suggestion dropdown UI library for SolidJS",
   "type": "module",
   "main": "./dist/main.cjs",
   "module": "./dist/main.js",

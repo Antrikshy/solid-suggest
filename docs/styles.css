@@ -19,12 +19,13 @@ body {
 
   &:before,
   &:after {
+    height: 1rem;
     content: "";
     position: fixed;
-    background: var(--accent);
     left: 0;
     right: 0;
-    height: 1rem;
+    background: var(--accent);
+    z-index: 2;
   }
 
   &:before {
@@ -53,6 +54,7 @@ h1.logo {
   cursor: default;
   background-color: var(--accent);
   color: #fff;
+  z-index: 2;
 }
 
 main {
@@ -93,9 +95,10 @@ code {
     align-items: center;
   }
 
-  #example2 {
+  #example2, #example3 {
     .s-sug-container {
       width: 25em;
+      position: relative;
 
       input {
         width: 100%;
@@ -105,8 +108,9 @@ code {
         display: flex;
         flex-direction: column;
         max-height: 20em;
-        margin: 0.25em 0 0;
+        width: 100%;
         padding: 0.25em 0 0 0;
+        position: absolute;
         list-style: none;
         box-shadow: lightgray 0 0.25em 0.5em;
         background-color: #fff;
@@ -122,6 +126,29 @@ code {
             color: #fff;
           }
         }
+      }
+    }
+  }
+  #example2 {
+    .s-sug-container {
+      ul {
+        margin: 0.25em 0 0;
+        top: 1lh;
+        left: 0;
+      }
+    }
+  }
+  #example3 {
+    .s-sug-container {
+      display: flex;
+      flex-direction: column-reverse;
+      margin-top: 20rem;  /* Making room for demo purposes */
+
+      ul {
+        flex-direction: column-reverse;
+        margin: 0 0 0.25em;
+        bottom: 1lh;
+        left: 0;
       }
     }
   }
