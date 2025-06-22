@@ -19,6 +19,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "devDemo": "npx http-server -p 8000",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
