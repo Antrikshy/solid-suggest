@@ -2,6 +2,24 @@
   "name": "solid-suggest",
   "version": "1.0.0",
   "description": "Headless search suggestion dropdown UI library for SolidJS",
+  "homepage": "https://antrikshy.com/solid-suggest",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Antrikshy/solid-suggest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Antrikshy/solid-suggest/issues"
+  },
+  "keywords": [
+    "solidjs",
+    "search",
+    "suggestions",
+    "dropdown",
+    "autocomplete",
+    "ui"
+  ],
+  "author": "Antriksh Yadav",
+  "license": "ISC",
   "type": "module",
   "main": "./dist/main.cjs",
   "module": "./dist/main.js",
@@ -22,16 +40,6 @@
     "devDemo": "npx http-server -p 8000",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [
-    "solidjs",
-    "search",
-    "suggestions",
-    "dropdown",
-    "autocomplete",
-    "ui"
-  ],
-  "author": "Antriksh Yadav",
-  "license": "ISC",
   "peerDependencies": {
     "solid-js": "^1.9.x"
   },
