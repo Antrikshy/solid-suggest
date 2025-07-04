@@ -74,7 +74,7 @@ npm install
 ... before anything else.
 
 ```
-npm run dev
+npm run devOnly
 ```
 
 ... runs a continuous watcher for changes to *library code* that transpiles TypeScript to a dist/ dir at project top level.
@@ -84,3 +84,9 @@ npm run devDemo
 ```
 
 ... runs a local server that you can use to see and iterate on the demo page at http://localhost:8000/docs/index.htm. This is a basic HTML page that imports some libraries from CDNs. Hot reload/replacement is not enabled, so it needs manual refreshing.
+
+```
+npm run devWithDemo
+```
+
+... runs both of the above at the same time.
