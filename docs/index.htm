@@ -165,18 +165,19 @@ function Example() {
       <div class="doc-demo-area" id="example2"></div>
     </section>
     <div class="doc-description">
-      <h2>Upside-down suggestions</h2>
-      <big>Arrow keys reversed, CSS reverses UI elements</big>
+      <h2>Upside-down suggestions, debounce</h2>
+      <big>Arrow keys reversed, CSS to reverse UI elements, 500ms debounce</big>
     </div>
     <section class="doc-example">
       <pre class="doc-code-area">
         <strong>JSX</strong>
         <code class="language-javascript">
-// Same as above, but with this change
+// Same as above, but with these changes
 
 &lt;Suggest
   // ...
   reverseKeyInput={true}
+  debounceMs={500} // Debounce input by 500ms
 />
         </code>
         <strong>CSS</strong>
@@ -240,7 +241,7 @@ return (
 );
       </code></pre>
       <p><strong>Q. Can I fetch search suggestions from network calls?</strong></p>
-      <p>Sure! solid-suggest doesn't provide network fetch as a built-in feature, but you can do whatever you want in your <code>onQuery</code> implementation.</p>
+      <p>Sure! solid-suggest doesn't provide network fetch as a built-in feature, but you can do whatever you want in your <code>onQuery</code> implementation. Consider supplying a <code>debounceMs</code> prop to delay <code>onQuery</code> triggers after user input, reducing network calls.</p>
     </section>
   </main>
 
@@ -384,7 +385,8 @@ return (
             )
           ),
           onSelect: item => setSelected(item.name),
-          reverseKeyInput: true
+          reverseKeyInput: true,
+          debounceMs: 500 // Debounce input by 500ms
         })
       ];
     }

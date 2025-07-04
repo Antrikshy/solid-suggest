@@ -2,7 +2,7 @@
 
 solid-suggest is a UI component for SolidJS developers that renders a text input with dropdown suggestions. It can be used in scenarios such as search suggestions or results triggered by text input.
 
-It's a *super* simple library that doesn't have many batteries included. See following sections for what it can and can't do for you.
+It's a *super* simple library without many batteries included. See following sections for what it can and can't do for you.
 
 **Because of its simplicity, I also expect it to be usable even without updates for years.**
 
@@ -47,16 +47,18 @@ Exposes two main interfaces as functions that you implement:
 1. `onQuery` - solid-suggest runs it on initial render and on each user input change. For solid-suggest, your implementation answers the question "what suggestions should solid-suggest show in the current state?"
 2. `onSelect` - solid-suggest invokes this to emit the user's selection to your code.
 
-All this libary does is provide JavaScript/TypeScript bones for a suggestions dropdown so that you don't have to clutter your application with the required internal states, keyboard and mouse handling, etc.
+All this library does is provide JavaScript/TypeScript bones for a suggestions dropdown so that you don't have to clutter your application with the required internal states, keyboard and mouse handling, etc.
 
-solid-suggest also supports objects as suggestions (not just strings), with support for custom rendering of each suggestion. Styling is still supplied by you.
+- Supports objects as suggestions (not just strings), with support for custom rendering of each suggestion.
+- Supports optional debouncing of user input via the `debounceMs` prop (in milliseconds). If not set or zero, input is not debounced.
+- Styling is still supplied by you.
 
 Some more questions are answered [in the docs](https://antrikshy.com/solid-suggest).
 
 ## What it Doesn't Do
 
 1. Come with *any* styling. solid-suggest is a **headless** library that completely relies on the you to style. This way, it fully integrates with any branding and design system.
-2. Provide built-in network fetch capabilities. You are free to make network calls this in their `onQuery` implementations.
+2. Provide built-in network fetch capabilities. You are free to make network calls this in their `onQuery` implementations. Consider supplying a `debounceMs` value to reduce network calls.
 3. Wash your car.
 
 Some more questions are answered [in the docs](https://antrikshy.com/solid-suggest).

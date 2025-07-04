@@ -5,13 +5,34 @@ export interface SuggestProps<T = string> {
   onSelect: (suggestion: T) => void,
   renderSuggestion: (suggestion: T) => HTMLElement,
   reverseKeyInput?: boolean,
+  debounceMs?: number, // Debounce period in milliseconds
 }
 
 export default function Suggest(props: SuggestProps) {
+  // Basic signals for component state
   const [query, setQuery] = createSignal('');
   const [staged, setStaged] = createSignal<number | null>(null);
-  const suggestions = createMemo(() => props.onQuery(query()));
+  // Internal signal for user input, separate from query to handle optional debounce
+  const [debouncedQuery, setDebouncedQuery] = createSignal('');
+
+  // Just a variable to store debounce timeout, if applicable
+  let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  const suggestions = createMemo(() => props.onQuery(debouncedQuery()));
   const numSuggestions = createMemo(() => suggestions().length);
+
+  function handleInput(e: Event) {
+    const value = (e.currentTarget as HTMLInputElement).value;
+    setQuery(value);
+    if (typeof props.debounceMs === 'number' && props.debounceMs > 0) {
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        setDebouncedQuery(value);
+      }, props.debounceMs);
+    } else {
+      setDebouncedQuery(value);
+    }
+  }
 
   function stageSuggestion(index: number) {
     setStaged(index);
@@ -43,7 +64,9 @@ export default function Suggest(props: SuggestProps) {
 
   function reset() {
     setQuery('');
+    setDebouncedQuery('');
     setStaged(null);
+    if (debounceTimeout) clearTimeout(debounceTimeout);
   }
 
   // Handles special input for suggestion behavior
@@ -83,7 +106,7 @@ export default function Suggest(props: SuggestProps) {
       type='search'
       class='s-sug-search'
       value={query()}
-      on:input={e => setQuery(e.currentTarget.value)}
+      on:input={handleInput}
       on:keydown={handleKeyDown}
       aria-autocomplete='list'
     />
