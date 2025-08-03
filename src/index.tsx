@@ -1,14 +1,19 @@
-import { createMemo, createSignal } from 'solid-js'
+import { createMemo, createSignal, createEffect, JSX } from 'solid-js'
 
-export interface SuggestProps<T = string> {
-  onQuery: (query: string) => T[],  // Suggestions assumed ordered by client
+export interface SuggestProps<T> {
+  onQuery: (query: string) => T[] | Promise<T[]>,  // Can return array or Promise
   onSelect: (suggestion: T) => void,
-  renderSuggestion: (suggestion: T) => HTMLElement,
+  renderSuggestion: (suggestion: T) => HTMLElement | JSX.Element,
+  placeholder?: string,
   reverseKeyInput?: boolean,
   debounceMs?: number, // Debounce period in milliseconds
 }
 
-export default function Suggest(props: SuggestProps) {
+export default function Suggest<T = string>(props: SuggestProps<T>) {
+  // Suggestions to be rendered
+  const [suggestions, setSuggestions] = createSignal<T[]>([]);
+  const numSuggestions = createMemo(() => suggestions().length);
+
   // Basic signals for component state
   const [query, setQuery] = createSignal('');
   const [staged, setStaged] = createSignal<number | null>(null);
@@ -18,8 +23,15 @@ export default function Suggest(props: SuggestProps) {
   // Just a variable to store debounce timeout, if applicable
   let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  const suggestions = createMemo(() => props.onQuery(debouncedQuery()));
-  const numSuggestions = createMemo(() => suggestions().length);
+  // Effect to update suggestions when debouncedQuery changes
+  createEffect(() => {
+    const result = props.onQuery(debouncedQuery());
+    if (result instanceof Promise) {
+      result.then(setSuggestions);
+    } else {
+      setSuggestions(result);
+    }
+  });
 
   function handleInput(e: Event) {
     const value = (e.currentTarget as HTMLInputElement).value;
@@ -106,6 +118,7 @@ export default function Suggest(props: SuggestProps) {
       type='search'
       class='s-sug-search'
       value={query()}
+      placeholder={props.placeholder ?? ''}
       on:input={handleInput}
       on:keydown={handleKeyDown}
       aria-autocomplete='list'

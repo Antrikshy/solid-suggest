@@ -1,5 +1,7 @@
 # solid-suggest
 
+[![NPM](https://nodei.co/npm/solid-suggest.png)](https://npmjs.org/package/solid-suggest)
+
 solid-suggest is a UI component for SolidJS developers that renders a text input with dropdown suggestions. It can be used in scenarios such as search suggestions or results triggered by text input.
 
 It's a *super* simple library without many batteries included. See following sections for what it can and can't do for you.

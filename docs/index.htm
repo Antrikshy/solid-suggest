@@ -121,6 +121,7 @@ function Example() {
           )
         }
         onSelect={item => setSelected(item.name)}
+        placeholder="Search historical sites"
       />
     &lt;/>
   );
@@ -178,6 +179,7 @@ function Example() {
   // ...
   reverseKeyInput={true}
   debounceMs={500} // Debounce input by 500ms
+  placeholder="Search Overwatch heroes"
 />
         </code>
         <strong>CSS</strong>
@@ -249,7 +251,7 @@ return (
   <script type="module">
     import { render } from "solid-js/web";
     import { createSignal, createEffect } from "solid-js";
-    import Suggest from "../dist/index.js";
+    import Suggest from "https://unpkg.com/solid-suggest@latest/dist/index.js";
 
     const items1 = ["Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape", "Honeydew", "Kiwi", "Lemon"];
     function Example() {
@@ -281,7 +283,7 @@ return (
   <script type="module">
     import { render } from "solid-js/web";
     import { createSignal, createEffect } from "solid-js";
-    import Suggest from "../dist/index.js";
+    import Suggest from "https://unpkg.com/solid-suggest@latest/dist/index.js";
 
     const items2 = [
       { name: "Eiffel Tower", kind: "Monument", rating: 5 },
@@ -329,7 +331,8 @@ return (
               item.kind.toLowerCase().includes(query.toLowerCase())
             )
           ),
-          onSelect: item => setSelected(item.name)
+          onSelect: item => setSelected(item.name),
+          placeholder: "Search historical sites"
         })
       ];
     }
@@ -341,7 +344,7 @@ return (
   <script type="module">
     import { render } from "solid-js/web";
     import { createSignal, createEffect } from "solid-js";
-    import Suggest from "../dist/index.js";
+    import Suggest from "https://unpkg.com/solid-suggest@latest/dist/index.js";
 
     const items3 = [
       { name: "Tracer", role: "Damage" },
@@ -385,6 +388,7 @@ return (
             )
           ),
           onSelect: item => setSelected(item.name),
+          placeholder: "Search Overwatch heroes",
           reverseKeyInput: true,
           debounceMs: 500 // Debounce input by 500ms
         })
